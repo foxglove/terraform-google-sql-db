@@ -78,6 +78,7 @@ resource "google_sql_database_instance" "default" {
   }
 
   settings {
+    data_api_access              = var.data_api_access
     tier                         = var.tier
     edition                      = var.edition
     activation_policy            = var.activation_policy
