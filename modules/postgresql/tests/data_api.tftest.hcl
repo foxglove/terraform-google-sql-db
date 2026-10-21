@@ -4,7 +4,7 @@ mock_provider "google-beta" {
 
   mock_resource "google_sql_database_instance" {
     defaults = {
-      settings = [{ data_api_access = "DISALLOW_DATA_API" }]
+      settings = { data_api_access = "DISALLOW_DATA_API" }
     }
   }
 }
