@@ -1,5 +1,13 @@
 mock_provider "google" {}
-mock_provider "google-beta" {}
+mock_provider "google-beta" {
+  override_during = plan
+
+  mock_resource "google_sql_database_instance" {
+    defaults = {
+      settings = [{ data_api_access = "DISALLOW_DATA_API" }]
+    }
+  }
+}
 mock_provider "random" {}
 mock_provider "null" {}
 
@@ -9,12 +17,10 @@ variables {
   database_version = "POSTGRES_17"
   zone             = "us-central1-a"
   tier             = "db-custom-2-7680"
-  data_api_access  = "DISALLOW_DATA_API"
   read_replicas = [
     {
       zone             = "us-central1-a"
       name             = "app"
-      data_api_access  = "DISALLOW_DATA_API"
       user_labels      = {}
       ip_configuration = {}
     },
