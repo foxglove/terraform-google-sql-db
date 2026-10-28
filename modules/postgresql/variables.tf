@@ -101,6 +101,17 @@ variable "deletion_protection" {
   default     = true
 }
 
+variable "data_api_access" {
+  description = "Cloud SQL Data API access for the primary instance. Null leaves the API default unchanged."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.data_api_access == null || contains(["ALLOW_DATA_API", "DISALLOW_DATA_API"], var.data_api_access)
+    error_message = "data_api_access must be ALLOW_DATA_API, DISALLOW_DATA_API, or null."
+  }
+}
+
 variable "database_flags" {
   description = "The database flags for the Cloud SQL instance. See [more details](https://cloud.google.com/sql/docs/postgres/flags)"
   type = list(object({
@@ -351,6 +362,7 @@ variable "ip_configuration" {
 variable "read_replicas" {
   description = "List of read replicas to create. Encryption key is required for replica in different region. For replica in same region as master set encryption_key_name = null"
   type = list(object({
+    data_api_access       = optional(string)
     name                  = string
     name_override         = optional(string)
     tier                  = optional(string)

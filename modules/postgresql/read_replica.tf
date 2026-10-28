@@ -39,6 +39,7 @@ resource "google_sql_database_instance" "replicas" {
   encryption_key_name  = (join("-", slice(split("-", lookup(each.value, "zone", local.zone)), 0, 2))) == var.region ? null : each.value.encryption_key_name
 
   settings {
+    data_api_access             = each.value.data_api_access
     tier                        = lookup(each.value, "tier", null) == null ? var.tier : lookup(each.value, "tier", null)
     edition                     = lookup(each.value, "edition", null) == null ? var.edition : lookup(each.value, "edition", null)
     activation_policy           = "ALWAYS"
