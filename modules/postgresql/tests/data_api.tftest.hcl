@@ -52,11 +52,21 @@ run "enable_data_api_on_primary" {
 
   variables {
     data_api_access = "ALLOW_DATA_API"
-    read_replicas   = []
+    read_replicas = [
+      {
+        zone             = "us-central1-a"
+        name             = "app"
+        user_labels      = {}
+        ip_configuration = {}
+      },
+    ]
   }
 
   assert {
-    condition     = google_sql_database_instance.default.settings[0].data_api_access == "ALLOW_DATA_API"
-    error_message = "The explicit primary setting must be passed to Cloud SQL."
+    condition = (
+      google_sql_database_instance.default.settings[0].data_api_access == "ALLOW_DATA_API" &&
+      google_sql_database_instance.replicas["api-replicaapp"].settings[0].data_api_access != "ALLOW_DATA_API"
+    )
+    error_message = "Enabling the primary must not enable replicas without their own explicit setting."
   }
 }
